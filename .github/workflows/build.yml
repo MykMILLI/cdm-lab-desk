@@ -1,0 +1,18 @@
+name: Windows build
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet build src/CdmLabDesk/CdmLabDesk.csproj --configuration Release
+      - run: dotnet publish src/CdmLabDesk/CdmLabDesk.csproj --configuration Release --runtime win-x64 --self-contained true --output artifacts/app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: foundation-only-not-an-installer
+          path: artifacts/app
